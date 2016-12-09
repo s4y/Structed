@@ -19,7 +19,14 @@ const data = {
  *   ])])
  * ])
  *
- * 
+ * {
+ *  Dictionary: {
+ *    validate: (member) => member instanceof DictionaryEntry
+ *  }
+ *  DictionaryEntry: {
+ *    validate: (member) => member.length == 2 && member[0] instanceof String
+ *  }
+ * }
  *
  */
 
