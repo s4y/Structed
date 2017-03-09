@@ -13,5 +13,108 @@ body {
 	margin: 0;
 }
 
+div {
+  border: 1px solid white;
+  padding: 0.5em;
+  margin: 0.5em;
+  min-height: 1em;
+}
+
+div:focus {
+  outline: none;
+  background: green;
+}
+
 </style>
-<script defer src="js/bootstrap.js" data-main="js/main.js"></script>
+<body>
+<section id=root>
+  <div tabindex="0"></div>
+  <div tabindex="0">
+    <div tabindex="0"></div>
+    <div tabindex="0"></div>
+  </div>
+  <div tabindex="0"></div>
+  <div tabindex="0">
+    <div tabindex="0">
+      <div tabindex="0"></div>
+    </div>
+  </div>
+</section>
+<script>
+'use strict';
+
+let rootNode = document.getElementById('root');
+let selectedNode = null;
+
+window.addEventListener('focusin', e => {
+  selectedNode = e.target;
+});
+
+window.addEventListener('focusout', e => {
+  selectedNode.parentNode.structed_previousSelection = selectedNode;
+  selectedNode = null;
+});
+
+const keyHandlers = {
+  37 /* left */: () => {
+    let target;
+    if (selectedNode) {
+      target = selectedNode.parentNode;
+    } else {
+      target = rootNode;
+    }
+    if (target) {
+      target.focus();
+    }
+  },
+  38 /* up */: () => {
+    let target;
+    if (selectedNode) {
+      target = selectedNode.previousElementSibling;
+      if (!target) {
+        target = selectedNode.parentNode;
+      }
+    } else {
+      target = rootNode.lastElementChild;
+    }
+    if (target) {
+      target.focus();
+    }
+  },
+  39 /* right */: () => {
+    let target;
+    if (selectedNode) {
+      target = selectedNode.structed_previousSelection ||
+        selectedNode.firstElementChild;
+    } else {
+      target = rootNode;
+    }
+    if (target) {
+      target.focus();
+    }
+  },
+  40 /* down */: () => {
+    let target;
+    if (selectedNode) {
+      target = selectedNode.nextElementSibling;
+      if (!target) {
+        target = selectedNode.parentNode;
+      }
+    } else {
+      target = rootNode.firstElementChild;
+    }
+    if (target) {
+      target.focus();
+    }
+  },
+};
+
+window.addEventListener('keydown', e => {
+  let handler = keyHandlers[e.keyCode];
+  if (handler) {
+    e.preventDefault();
+    handler();
+  }
+});
+
+</script>
